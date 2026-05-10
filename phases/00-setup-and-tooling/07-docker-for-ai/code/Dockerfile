@@ -1,29 +1,84 @@
-FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
+# FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
+
+# ENV DEBIAN_FRONTEND=noninteractive
+# ENV PYTHONUNBUFFERED=1
+
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     python3.12 \
+#     python3.12-venv \
+#     python3.12-dev \
+#     python3-pip \
+#     git \
+#     curl \
+#     build-essential \
+#     && rm -rf /var/lib/apt/lists/*
+
+# RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+
+# RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# RUN python -m pip install --no-cache-dir \
+#     torch==2.3.1 \
+#     torchvision==0.18.1 \
+#     torchaudio==2.3.1 \
+#     --index-url https://download.pytorch.org/whl/cu124
+
+# RUN python -m pip install --no-cache-dir \
+#     numpy \
+#     pandas \
+#     scikit-learn \
+#     matplotlib \
+#     jupyter \
+#     transformers \
+#     datasets \
+#     accelerate \
+#     safetensors
+
+# WORKDIR /workspace
+
+# VOLUME ["/workspace", "/models"]
+
+# EXPOSE 8888
+
+# CMD ["python"]
+
+
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.12 \
-    python3.12-venv \
-    python3.12-dev \
+    python3 \
+    python3-venv \
+    python3-dev \
     python3-pip \
     git \
     curl \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
-RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
+# Create virtual environment
+RUN python -m venv /opt/venv
 
-RUN python -m pip install --no-cache-dir \
-    torch==2.3.1 \
-    torchvision==0.18.1 \
-    torchaudio==2.3.1 \
-    --index-url https://download.pytorch.org/whl/cu124
+# Use venv by default
+ENV PATH="/opt/venv/bin:$PATH"
 
-RUN python -m pip install --no-cache-dir \
+# Upgrade pip tools inside venv
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# CPU-only PyTorch
+RUN pip install --no-cache-dir \
+    # --retries 10 \
+    torch \
+    torchvision \
+    torchaudio 
+    
+
+# AI / Data Science libraries
+RUN pip install --no-cache-dir \
     numpy \
     pandas \
     scikit-learn \
@@ -32,7 +87,8 @@ RUN python -m pip install --no-cache-dir \
     transformers \
     datasets \
     accelerate \
-    safetensors
+    safetensors \
+    flask
 
 WORKDIR /workspace
 
