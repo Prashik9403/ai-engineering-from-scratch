@@ -1,0 +1,14 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        88,
+        120
+    ],
+    "notebook.output.scrolling": true,
+    "files.autoSave": "afterDelay",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.scrollback": 10000
+}

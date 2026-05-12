@@ -32,7 +32,7 @@ def inline_plotting():
     x = np.linspace(0, 10, 200)
     y_sin = np.sin(x)
     y_noisy = y_sin + np.random.normal(0, 0.2, 200)
-
+    
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 
     axes[0].plot(x, y_sin, label="sin(x)")
