@@ -1,5 +1,5 @@
 import random
-
+import math
 
 class Value:
     def __init__(self, data, children=(), op=''):
@@ -345,6 +345,180 @@ def demo_verify_pytorch():
     print("  MATCH\n")
 
 
+class Dual:
+    def __init__(self, real, dual=0.0):
+        self.real = float(real)
+        self.dual = float(dual)
+
+    def __repr__(self):
+        return f"Dual(real={self.real:.6f}, dual={self.dual:.6f})"
+
+    # -----------------------------
+    # Addition
+    # -----------------------------
+    def __add__(self, other):
+        other = other if isinstance(other, Dual) else Dual(other)
+
+        return Dual(
+            self.real + other.real,
+            self.dual + other.dual
+        )
+
+    __radd__ = __add__
+
+    # -----------------------------
+    # Multiplication
+    # -----------------------------
+    def __mul__(self, other):
+        other = other if isinstance(other, Dual) else Dual(other)
+
+        return Dual(
+            self.real * other.real,
+            self.real * other.dual + self.dual * other.real
+        )
+
+    __rmul__ = __mul__
+
+    # -----------------------------
+    # Negation / subtraction
+    # -----------------------------
+    def __neg__(self):
+        return Dual(-self.real, -self.dual)
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __rsub__(self, other):
+        return other + (-self)
+
+    # -----------------------------
+    # Power
+    # -----------------------------
+    def __pow__(self, n):
+        return Dual(
+            self.real ** n,
+            n * (self.real ** (n - 1)) * self.dual
+        )
+
+    # -----------------------------
+    # Division
+    # -----------------------------
+    def __truediv__(self, other):
+        other = other if isinstance(other, Dual) else Dual(other)
+
+        return Dual(
+            self.real / other.real,
+            (
+                self.dual * other.real
+                - self.real * other.dual
+            ) / (other.real ** 2)
+        )
+
+    # -----------------------------
+    # tanh
+    # -----------------------------
+    def tanh(self):
+        t = math.tanh(self.real)
+
+        return Dual(
+            t,
+            (1 - t**2) * self.dual
+        )
+
+    # -----------------------------
+    # exp
+    # -----------------------------
+    def exp(self):
+        e = math.exp(self.real)
+
+        return Dual(
+            e,
+            e * self.dual
+        )
+
+    # -----------------------------
+    # log
+    # -----------------------------
+    def log(self):
+        return Dual(
+            math.log(self.real),
+            (1 / self.real) * self.dual
+        )
+
+    # -----------------------------
+    # relu
+    # -----------------------------
+    def relu(self):
+        return Dual(
+            max(0, self.real),
+            self.dual if self.real > 0 else 0.0
+        )
+
+
+# =========================================================
+# DEMOS
+# =========================================================
+
+def demo_square():
+    print("=== f(x) = x^2 ===")
+
+    x = Dual(2.0, 1.0)
+    y = x ** 2
+
+    print(f"x = {x}")
+    print(f"y = {y}")
+
+    print(f"value      = {y.real}")
+    print(f"derivative = {y.dual}")
+    print("expected derivative = 4.0")
+    print()
+
+
+def demo_complex():
+    print("=== f(x) = tanh(x^2 + 2x) ===")
+
+    x = Dual(0.5, 1.0)
+
+    y = (x**2 + 2*x).tanh()
+
+    print(f"y = {y}")
+    print(f"f(x)  = {y.real}")
+    print(f"f'(x) = {y.dual}")
+    print()
+
+
+def demo_compare_reverse_mode():
+    print("=== Compare with Reverse Mode ===")
+
+    # forward mode
+    x = Dual(0.5, 1.0)
+    y = (x**3 + x * 2 + 1)
+
+    forward_grad = y.dual
+
+    # reverse mode
+    from math import isclose
+
+    # assuming your Value class exists
+    xv = Value(0.5)
+    yv = xv**3 + xv * 2 + 1
+    yv.backward()
+
+    reverse_grad = xv.grad
+
+    print(f"Forward mode grad = {forward_grad}")
+    print(f"Reverse mode grad = {reverse_grad}")
+
+    print(
+        "match =",
+        isclose(forward_grad, reverse_grad, rel_tol=1e-6)
+    )
+    print()
+
+
+
+
+
 if __name__ == "__main__":
     demo_basic()
     demo_power()
@@ -355,3 +529,7 @@ if __name__ == "__main__":
     demo_mlp_training()
     demo_verify_pytorch()
     print("All demos passed.")
+    demo_square()
+    demo_compare_reverse_mode()
+
+    
