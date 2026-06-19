@@ -417,7 +417,7 @@
 
 
 
-# import math
+import math
 
 # def rotation_2d(theta):
 #     c, s = math.cos(theta), math.sin(theta)
@@ -794,284 +794,455 @@
 
 
 
-def numerical_derivative(f, x, h=1e-7):
-    return (f(x + h) - f(x - h)) / (2 * h)
+# def numerical_derivative(f, x, h=1e-7):
+#     return (f(x + h) - f(x - h)) / (2 * h)
 
-def f(x):
-    return x ** 2
+# def f(x):
+#     return x ** 2
 
-for x in [-2, -1, 0, 1, 2]:
-    numerical = numerical_derivative(f, x)
-    analytical = 2 * x
-    print(f"x={x:2d}  f'(x) numerical={numerical:.6f}  analytical={analytical:.1f}")
-
-
-def numerical_gradient(f, point, h=1e-7):
-    gradient = []
-    for i in range(len(point)):
-        point_plus = list(point)
-        point_minus = list(point)
-        point_plus[i] += h
-        point_minus[i] -= h
-        partial = (f(point_plus) - f(point_minus)) / (2 * h)
-        gradient.append(partial)
-    return gradient
-
-def f_multi(point):
-    x, y = point
-    return x**2 + 3*x*y + y**2
-
-grad = numerical_gradient(f_multi, [1.0, 2.0])
-print(f"Numerical gradient at (1,2): {[f'{g:.4f}' for g in grad]}")
-print(f"Analytical gradient at (1,2): [2*1+3*2, 3*1+2*2] = [{2*1+3*2}, {3*1+2*2}]")
+# for x in [-2, -1, 0, 1, 2]:
+#     numerical = numerical_derivative(f, x)
+#     analytical = 2 * x
+#     print(f"x={x:2d}  f'(x) numerical={numerical:.6f}  analytical={analytical:.1f}")
 
 
-x = 5.0
-lr = 0.1
-for step in range(20):
-    grad = 2 * x
-    x = x - lr * grad
-    print(f"step {step:2d}  x={x:8.4f}  f(x)={x**2:10.6f}")
+# def numerical_gradient(f, point, h=1e-7):
+#     gradient = []
+#     for i in range(len(point)):
+#         point_plus = list(point)
+#         point_minus = list(point)
+#         point_plus[i] += h
+#         point_minus[i] -= h
+#         partial = (f(point_plus) - f(point_minus)) / (2 * h)
+#         gradient.append(partial)
+#     return gradient
+
+# def f_multi(point):
+#     x, y = point
+#     return x**2 + 3*x*y + y**2
+
+# grad = numerical_gradient(f_multi, [1.0, 2.0])
+# print(f"Numerical gradient at (1,2): {[f'{g:.4f}' for g in grad]}")
+# print(f"Analytical gradient at (1,2): [2*1+3*2, 3*1+2*2] = [{2*1+3*2}, {3*1+2*2}]")
 
 
-def f_2d(point):
-    x, y = point
-    return x**2 + y**2
-
-point = [4.0, 3.0]
-lr = 0.1
-for step in range(30):
-    grad = numerical_gradient(f_2d, point)
-    point = [p - lr * g for p, g in zip(point, grad)]
-    loss = f_2d(point)
-    if step % 5 == 0 or step == 29:
-        print(f"step {step:2d}  point=({point[0]:7.4f}, {point[1]:7.4f})  f={loss:.6f}")
+# x = 5.0
+# lr = 0.1
+# for step in range(20):
+#     grad = 2 * x
+#     x = x - lr * grad
+#     print(f"step {step:2d}  x={x:8.4f}  f(x)={x**2:10.6f}")
 
 
-import math
+# def f_2d(point):
+#     x, y = point
+#     return x**2 + y**2
 
-test_functions = [
-    ("x^2",      lambda x: x**2,          lambda x: 2*x),
-    ("x^3",      lambda x: x**3,          lambda x: 3*x**2),
-    ("sin(x)",   lambda x: math.sin(x),   lambda x: math.cos(x)),
-    ("e^x",      lambda x: math.exp(x),   lambda x: math.exp(x)),
-    ("1/x",      lambda x: 1/x,           lambda x: -1/x**2),
-]
+# point = [4.0, 3.0]
+# lr = 0.1
+# for step in range(30):
+#     grad = numerical_gradient(f_2d, point)
+#     point = [p - lr * g for p, g in zip(point, grad)]
+#     loss = f_2d(point)
+#     if step % 5 == 0 or step == 29:
+#         print(f"step {step:2d}  point=({point[0]:7.4f}, {point[1]:7.4f})  f={loss:.6f}")
 
-x = 2.0
-print(f"{'Function':<12} {'Numerical':>12} {'Analytical':>12} {'Error':>12}")
-print("-" * 50)
-for name, f, df in test_functions:
-    num = numerical_derivative(f, x)
-    ana = df(x)
-    err = abs(num - ana)
-    print(f"{name:<12} {num:12.6f} {ana:12.6f} {err:12.2e}")
+
+# import math
+
+# test_functions = [
+#     ("x^2",      lambda x: x**2,          lambda x: 2*x),
+#     ("x^3",      lambda x: x**3,          lambda x: 3*x**2),
+#     ("sin(x)",   lambda x: math.sin(x),   lambda x: math.cos(x)),
+#     ("e^x",      lambda x: math.exp(x),   lambda x: math.exp(x)),
+#     ("1/x",      lambda x: 1/x,           lambda x: -1/x**2),
+# ]
+
+# x = 2.0
+# print(f"{'Function':<12} {'Numerical':>12} {'Analytical':>12} {'Error':>12}")
+# print("-" * 50)
+# for name, f, df in test_functions:
+#     num = numerical_derivative(f, x)
+#     ana = df(x)
+#     err = abs(num - ana)
+#     print(f"{name:<12} {num:12.6f} {ana:12.6f} {err:12.2e}")
 
     
-def hessian_2d(f, x, y, h=1e-5):
-    fxx = (f(x + h, y) - 2 * f(x, y) + f(x - h, y)) / (h ** 2)
-    fyy = (f(x, y + h) - 2 * f(x, y) + f(x, y - h)) / (h ** 2)
-    fxy = (f(x + h, y + h) - f(x + h, y - h) - f(x - h, y + h) + f(x - h, y - h)) / (4 * h ** 2)
-    return [[fxx, fxy], [fxy, fyy]]
+# def hessian_2d(f, x, y, h=1e-5):
+#     fxx = (f(x + h, y) - 2 * f(x, y) + f(x - h, y)) / (h ** 2)
+#     fyy = (f(x, y + h) - 2 * f(x, y) + f(x, y - h)) / (h ** 2)
+#     fxy = (f(x + h, y + h) - f(x + h, y - h) - f(x - h, y + h) + f(x - h, y - h)) / (4 * h ** 2)
+#     return [[fxx, fxy], [fxy, fyy]]
 
-def saddle(x, y):
-    return x ** 2 - y ** 2
+# def saddle(x, y):
+#     return x ** 2 - y ** 2
 
-def bowl(x, y):
-    return x ** 2 + y ** 2
+# def bowl(x, y):
+#     return x ** 2 + y ** 2
 
-H_saddle = hessian_2d(saddle, 0.0, 0.0)
-H_bowl = hessian_2d(bowl, 0.0, 0.0)
-print(f"Saddle Hessian: {H_saddle}")  # [[2, 0], [0, -2]] -- mixed signs
-print(f"Bowl Hessian:   {H_bowl}")    # [[2, 0], [0, 2]]  -- both positive
+# H_saddle = hessian_2d(saddle, 0.0, 0.0)
+# H_bowl = hessian_2d(bowl, 0.0, 0.0)
+# print(f"Saddle Hessian: {H_saddle}")  # [[2, 0], [0, -2]] -- mixed signs
+# print(f"Bowl Hessian:   {H_bowl}")    # [[2, 0], [0, 2]]  -- both positive
 
 
-import math
+# import math
 
-def taylor_approx(f, f_prime, f_double_prime, x0, h, order=2):
-    result = f(x0)
-    if order >= 1:
-        result += f_prime(x0) * h
-    if order >= 2:
-        result += 0.5 * f_double_prime(x0) * h ** 2
-    return result
+# def taylor_approx(f, f_prime, f_double_prime, x0, h, order=2):
+#     result = f(x0)
+#     if order >= 1:
+#         result += f_prime(x0) * h
+#     if order >= 2:
+#         result += 0.5 * f_double_prime(x0) * h ** 2
+#     return result
 
-x0 = 0.0
-for h in [0.1, 0.5, 1.0, 2.0]:
-    true_val = math.sin(h)
-    t1 = taylor_approx(math.sin, math.cos, lambda x: -math.sin(x), x0, h, order=1)
-    t2 = taylor_approx(math.sin, math.cos, lambda x: -math.sin(x), x0, h, order=2)
-    print(f"h={h:.1f}  sin(h)={true_val:.4f}  order1={t1:.4f}  order2={t2:.4f}")
+# x0 = 0.0
+# for h in [0.1, 0.5, 1.0, 2.0]:
+#     true_val = math.sin(h)
+#     t1 = taylor_approx(math.sin, math.cos, lambda x: -math.sin(x), x0, h, order=1)
+#     t2 = taylor_approx(math.sin, math.cos, lambda x: -math.sin(x), x0, h, order=2)
+#     print(f"h={h:.1f}  sin(h)={true_val:.4f}  order1={t1:.4f}  order2={t2:.4f}")
+
+# import random
+
+# random.seed(42)
+
+# w = random.gauss(0, 1)
+# b = random.gauss(0, 1)
+# lr = 0.01
+
+# xs = [1.0, 2.0, 3.0, 4.0, 5.0]
+# ys = [3.0, 5.0, 7.0, 9.0, 11.0]
+
+# for epoch in range(200):
+#     total_loss = 0
+#     dw = 0
+#     db = 0
+#     for x, y in zip(xs, ys):
+#         pred = w * x + b
+#         error = pred - y
+#         total_loss += error ** 2
+#         dw += 2 * error * x
+#         db += 2 * error
+#     dw /= len(xs)
+#     db /= len(xs)
+#     total_loss /= len(xs)
+#     w -= lr * dw
+#     b -= lr * db
+#     if epoch % 40 == 0 or epoch == 199:
+#         print(f"epoch {epoch:3d}  w={w:.4f}  b={b:.4f}  loss={total_loss:.6f}")
+
+# print(f"\nLearned: y = {w:.2f}x + {b:.2f}")
+# print(f"Actual:  y = 2x + 1")
+
+
+# import numpy as np
+
+# x = np.array([1, 2, 3, 4, 5], dtype=float)
+# y = np.array([3, 5, 7, 9, 11], dtype=float)
+
+# w, b = np.random.randn(), np.random.randn()
+# lr = 0.01
+
+# for epoch in range(200):
+#     pred = w * x + b
+#     error = pred - y
+#     loss = np.mean(error ** 2)
+#     dw = np.mean(2 * error * x)
+#     db = np.mean(2 * error)
+#     w -= lr * dw
+#     b -= lr * db
+
+# print(f"Learned: y = {w:.2f}x + {b:.2f}")
+
+
+
+# def numerical_derivative(f, x, h=1e-5):
+#     return (f(x + h) - f(x - h)) / (2 * h)
+
+
+# def numerical_second_derivative(f, x, h=1e-5):
+#     return (
+#         numerical_derivative(f, x + h, h)
+#         - numerical_derivative(f, x - h, h)
+#     ) / (2 * h)
+
+
+# # Test function
+# def f(x):
+#     return x ** 3
+
+
+# x = 2
+
+# second_deriv = numerical_second_derivative(f, x)
+
+# print("Approx second derivative:", second_deriv)
+# print("Expected:", 12)
+
+
+
+# def f(x, y):
+#     return (x - 3)**2 + (y + 1)**2
+
+
+# def grad_x(x):
+#     return 2 * (x - 3)
+
+
+# def grad_y(y):
+#     return 2 * (y + 1)
+
+
+# # Start point
+# x = 0.0
+# y = 0.0
+
+# lr = 0.1
+
+# for step in range(50):
+
+#     dx = grad_x(x)
+#     dy = grad_y(y)
+
+#     x = x - lr * dx
+#     y = y - lr * dy
+
+#     loss = f(x, y)
+
+#     print(
+#         f"step {step:2d} | "
+#         f"x={x:.4f}  y={y:.4f}  loss={loss:.6f}"
+#     )
+
+# print("\nFinal point:")
+# print(f"x = {x:.4f}, y = {y:.4f}")
+
+
+# def f(x):
+#     return x**4 - 3*x**2
+
+
+# def grad(x):
+#     return 4*x**3 - 6*x
+
+
+# # -----------------------------
+# # Standard Gradient Descent
+# # -----------------------------
+
+# x = 2.0
+# lr = 0.01
+
+# print("STANDARD GRADIENT DESCENT\n")
+
+# for step in range(50):
+
+#     g = grad(x)
+
+#     x = x - lr * g
+
+#     print(
+#         f"step {step:2d} | "
+#         f"x={x:.6f} | "
+#         f"f(x)={f(x):.6f}"
+#     )
+
+
+# # -----------------------------
+# # Momentum Gradient Descent
+# # -----------------------------
+
+# x = 2.0
+# v = 0.0
+
+# lr = 0.01
+# beta = 0.9
+
+# print("\nMOMENTUM GRADIENT DESCENT\n")
+
+# for step in range(50):
+
+#     g = grad(x)
+
+#     v = beta * v - lr * g
+
+#     x = x + v
+
+#     print(
+#         f"step {step:2d} | "
+#         f"x={x:.6f} | "
+#         f"v={v:.6f} | "
+#         f"f(x)={f(x):.6f}"
+#     )
+
 
 import random
+import matplotlib.pyplot as plt
 
-random.seed(42)
+def sample_exponential(lam, n=1):
+    """
+    Generate samples from an Exponential(lambda) distribution
+    using inverse transform sampling.
+    """
+    if lam <= 0:
+        raise ValueError("lambda must be positive")
 
-w = random.gauss(0, 1)
-b = random.gauss(0, 1)
-lr = 0.01
+    samples = []
+    for _ in range(n):
+        u = random.random()
 
-xs = [1.0, 2.0, 3.0, 4.0, 5.0]
-ys = [3.0, 5.0, 7.0, 9.0, 11.0]
+        # Avoid log(0)
+        while u == 0:
+            u = random.random()
 
-for epoch in range(200):
-    total_loss = 0
-    dw = 0
-    db = 0
-    for x, y in zip(xs, ys):
-        pred = w * x + b
-        error = pred - y
-        total_loss += error ** 2
-        dw += 2 * error * x
-        db += 2 * error
-    dw /= len(xs)
-    db /= len(xs)
-    total_loss /= len(xs)
-    w -= lr * dw
-    b -= lr * db
-    if epoch % 40 == 0 or epoch == 199:
-        print(f"epoch {epoch:3d}  w={w:.4f}  b={b:.4f}  loss={total_loss:.6f}")
+        x = -math.log(u) / lam
+        samples.append(x)
 
-print(f"\nLearned: y = {w:.2f}x + {b:.2f}")
-print(f"Actual:  y = 2x + 1")
+    return samples
 
+print("\n--- Exponential Distribution (Inverse Transform Sampling) ---")
+
+lam = 2.0
+samples = sample_exponential(lam, 10000)
+
+sample_mean = sum(samples) / len(samples)
+
+print(f"Lambda = {lam}")
+print(f"Expected mean = {1/lam:.4f}")
+print(f"Sample mean   = {sample_mean:.4f}")
+
+fig, ax = plt.subplots(figsize=(8,5))
+
+lam = 2.0
+samples = sample_exponential(lam, 10000)
+
+# Histogram
+ax.hist(
+    samples,
+    bins=50,
+    density=True,
+    alpha=0.6,
+    label="Sampled Histogram"
+)
+
+# True PDF
+xs = [i * 0.01 for i in range(800)]
+ys = [lam * math.exp(-lam * x) for x in xs]
+
+ax.plot(xs, ys, linewidth=2, label="True PDF")
+
+ax.set_title("Exponential Distribution via Inverse Transform Sampling")
+ax.set_xlabel("x")
+ax.set_ylabel("Density")
+ax.legend()
+
+plt.tight_layout()
+plt.savefig("exponential_inverse_sampling.png", dpi=150)
+plt.close()
+
+print("Saved: exponential_inverse_sampling.png")
 
 import numpy as np
 
-x = np.array([1, 2, 3, 4, 5], dtype=float)
-y = np.array([3, 5, 7, 9, 11], dtype=float)
+# Loaded die A
+pA = np.array([0.05, 0.10, 0.15, 0.20, 0.20, 0.30])
 
-w, b = np.random.randn(), np.random.randn()
-lr = 0.01
+# Loaded die B
+pB = np.array([0.30, 0.25, 0.20, 0.10, 0.10, 0.05])
 
-for epoch in range(200):
-    pred = w * x + b
-    error = pred - y
-    loss = np.mean(error ** 2)
-    dw = np.mean(2 * error * x)
-    db = np.mean(2 * error)
-    w -= lr * dw
-    b -= lr * db
+# Joint distribution
+joint = np.outer(pA, pB)
 
-print(f"Learned: y = {w:.2f}x + {b:.2f}")
+print("Joint Distribution:")
+print(joint)
 
+# Marginals
+marginal_A = joint.sum(axis=1)
+marginal_B = joint.sum(axis=0)
 
+print("\nMarginal Distribution of A:")
+print(marginal_A)
 
-def numerical_derivative(f, x, h=1e-5):
-    return (f(x + h) - f(x - h)) / (2 * h)
+print("\nMarginal Distribution of B:")
+print(marginal_B)
 
+# Independence test
+print("\nIndependent?")
+print(np.allclose(joint, np.outer(marginal_A, marginal_B)))
 
-def numerical_second_derivative(f, x, h=1e-5):
-    return (
-        numerical_derivative(f, x + h, h)
-        - numerical_derivative(f, x - h, h)
-    ) / (2 * h)
+import numpy as np
+from scipy.special import softmax
 
+logits = np.array([2.0, 0.5, -1.0, 3.0, 0.1])
 
-# Test function
-def f(x):
-    return x ** 3
+probs = softmax(logits)
 
+loss = -np.log(probs[3])
 
-x = 2
+print("Softmax probabilities:")
+print(probs)
 
-second_deriv = numerical_second_derivative(f, x)
+print("Cross-Entropy Loss:", loss)
 
-print("Approx second derivative:", second_deriv)
-print("Expected:", 12)
+import torch
+import torch.nn as nn
 
+# Batch size = 1
+logits = torch.tensor([[2.0, 0.5, -1.0, 3.0, 0.1]])
+target = torch.tensor([3])
 
+criterion = nn.CrossEntropyLoss()
 
-def f(x, y):
-    return (x - 3)**2 + (y + 1)**2
+loss = criterion(logits, target)
 
-
-def grad_x(x):
-    return 2 * (x - 3)
-
-
-def grad_y(y):
-    return 2 * (y + 1)
+print(loss.item())
 
 
-# Start point
-x = 0.0
-y = 0.0
+import math
 
-lr = 0.1
+def sequence_probability(sequence, log_probs):
+    """
+    Returns:
+        - most likely sequence
+        - total log probability
+        - equivalent raw probability
+    """
+    if len(sequence) != len(log_probs):
+        raise ValueError("Sequence and log_probs must have the same length.")
 
-for step in range(50):
+    total_log_prob = sum(log_probs)
+    raw_prob = math.exp(total_log_prob)
 
-    dx = grad_x(x)
-    dy = grad_y(y)
-
-    x = x - lr * dx
-    y = y - lr * dy
-
-    loss = f(x, y)
-
-    print(
-        f"step {step:2d} | "
-        f"x={x:.4f}  y={y:.4f}  loss={loss:.6f}"
-    )
-
-print("\nFinal point:")
-print(f"x = {x:.4f}, y = {y:.4f}")
+    return sequence, total_log_prob, raw_prob
 
 
-def f(x):
-    return x**4 - 3*x**2
+# ----------------------------------------------------
+# Test with a sentence of 50 words
+# Each word has probability 0.01
+# ----------------------------------------------------
 
+sentence = [f"word{i+1}" for i in range(50)]
 
-def grad(x):
-    return 4*x**3 - 6*x
+# log(p) for each word
+log_probs = [math.log(0.01)] * 50
 
+sequence, total_log_prob, raw_prob = sequence_probability(sentence, log_probs)
 
-# -----------------------------
-# Standard Gradient Descent
-# -----------------------------
+print("Most likely sequence:")
+print(" ".join(sequence))
 
-x = 2.0
-lr = 0.01
+print("\nTotal log probability:")
+print(total_log_prob)
 
-print("STANDARD GRADIENT DESCENT\n")
+print("\nEquivalent raw probability:")
+print(raw_prob)
 
-for step in range(50):
+# Verify against direct multiplication
+direct_prob = 0.01 ** 50
 
-    g = grad(x)
+print("\nDirect multiplication:")
+print(direct_prob)
 
-    x = x - lr * g
-
-    print(
-        f"step {step:2d} | "
-        f"x={x:.6f} | "
-        f"f(x)={f(x):.6f}"
-    )
-
-
-# -----------------------------
-# Momentum Gradient Descent
-# -----------------------------
-
-x = 2.0
-v = 0.0
-
-lr = 0.01
-beta = 0.9
-
-print("\nMOMENTUM GRADIENT DESCENT\n")
-
-for step in range(50):
-
-    g = grad(x)
-
-    v = beta * v - lr * g
-
-    x = x + v
-
-    print(
-        f"step {step:2d} | "
-        f"x={x:.6f} | "
-        f"v={v:.6f} | "
-        f"f(x)={f(x):.6f}"
-    )
+print("\nMatch:",
+      math.isclose(raw_prob, direct_prob, rel_tol=1e-12))
