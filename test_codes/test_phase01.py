@@ -1077,172 +1077,465 @@ import math
 #     )
 
 
-import random
+# import random
+# import matplotlib.pyplot as plt
+
+# def sample_exponential(lam, n=1):
+#     """
+#     Generate samples from an Exponential(lambda) distribution
+#     using inverse transform sampling.
+#     """
+#     if lam <= 0:
+#         raise ValueError("lambda must be positive")
+
+#     samples = []
+#     for _ in range(n):
+#         u = random.random()
+
+#         # Avoid log(0)
+#         while u == 0:
+#             u = random.random()
+
+#         x = -math.log(u) / lam
+#         samples.append(x)
+
+#     return samples
+
+# print("\n--- Exponential Distribution (Inverse Transform Sampling) ---")
+
+# lam = 2.0
+# samples = sample_exponential(lam, 10000)
+
+# sample_mean = sum(samples) / len(samples)
+
+# print(f"Lambda = {lam}")
+# print(f"Expected mean = {1/lam:.4f}")
+# print(f"Sample mean   = {sample_mean:.4f}")
+
+# fig, ax = plt.subplots(figsize=(8,5))
+
+# lam = 2.0
+# samples = sample_exponential(lam, 10000)
+
+# # Histogram
+# ax.hist(
+#     samples,
+#     bins=50,
+#     density=True,
+#     alpha=0.6,
+#     label="Sampled Histogram"
+# )
+
+# # True PDF
+# xs = [i * 0.01 for i in range(800)]
+# ys = [lam * math.exp(-lam * x) for x in xs]
+
+# ax.plot(xs, ys, linewidth=2, label="True PDF")
+
+# ax.set_title("Exponential Distribution via Inverse Transform Sampling")
+# ax.set_xlabel("x")
+# ax.set_ylabel("Density")
+# ax.legend()
+
+# plt.tight_layout()
+# plt.savefig("exponential_inverse_sampling.png", dpi=150)
+# plt.close()
+
+# print("Saved: exponential_inverse_sampling.png")
+
+# import numpy as np
+
+# # Loaded die A
+# pA = np.array([0.05, 0.10, 0.15, 0.20, 0.20, 0.30])
+
+# # Loaded die B
+# pB = np.array([0.30, 0.25, 0.20, 0.10, 0.10, 0.05])
+
+# # Joint distribution
+# joint = np.outer(pA, pB)
+
+# print("Joint Distribution:")
+# print(joint)
+
+# # Marginals
+# marginal_A = joint.sum(axis=1)
+# marginal_B = joint.sum(axis=0)
+
+# print("\nMarginal Distribution of A:")
+# print(marginal_A)
+
+# print("\nMarginal Distribution of B:")
+# print(marginal_B)
+
+# # Independence test
+# print("\nIndependent?")
+# print(np.allclose(joint, np.outer(marginal_A, marginal_B)))
+
+# import numpy as np
+# from scipy.special import softmax
+
+# logits = np.array([2.0, 0.5, -1.0, 3.0, 0.1])
+
+# probs = softmax(logits)
+
+# loss = -np.log(probs[3])
+
+# print("Softmax probabilities:")
+# print(probs)
+
+# print("Cross-Entropy Loss:", loss)
+
+# import torch
+# import torch.nn as nn
+
+# # Batch size = 1
+# logits = torch.tensor([[2.0, 0.5, -1.0, 3.0, 0.1]])
+# target = torch.tensor([3])
+
+# criterion = nn.CrossEntropyLoss()
+
+# loss = criterion(logits, target)
+
+# print(loss.item())
+
+
+# import math
+
+# def sequence_probability(sequence, log_probs):
+#     """
+#     Returns:
+#         - most likely sequence
+#         - total log probability
+#         - equivalent raw probability
+#     """
+#     if len(sequence) != len(log_probs):
+#         raise ValueError("Sequence and log_probs must have the same length.")
+
+#     total_log_prob = sum(log_probs)
+#     raw_prob = math.exp(total_log_prob)
+
+#     return sequence, total_log_prob, raw_prob
+
+
+# # ----------------------------------------------------
+# # Test with a sentence of 50 words
+# # Each word has probability 0.01
+# # ----------------------------------------------------
+
+# sentence = [f"word{i+1}" for i in range(50)]
+
+# # log(p) for each word
+# log_probs = [math.log(0.01)] * 50
+
+# sequence, total_log_prob, raw_prob = sequence_probability(sentence, log_probs)
+
+# print("Most likely sequence:")
+# print(" ".join(sequence))
+
+# print("\nTotal log probability:")
+# print(total_log_prob)
+
+# print("\nEquivalent raw probability:")
+# print(raw_prob)
+
+# # Verify against direct multiplication
+# direct_prob = 0.01 ** 50
+
+# print("\nDirect multiplication:")
+# print(direct_prob)
+
+# print("\nMatch:",
+#       math.isclose(raw_prob, direct_prob, rel_tol=1e-12))
+
+
+import numpy as np
 import matplotlib.pyplot as plt
 
-def sample_exponential(lam, n=1):
-    """
-    Generate samples from an Exponential(lambda) distribution
-    using inverse transform sampling.
-    """
-    if lam <= 0:
-        raise ValueError("lambda must be positive")
+##############################################################
+# Rosenbrock Function
+##############################################################
 
-    samples = []
-    for _ in range(n):
-        u = random.random()
-
-        # Avoid log(0)
-        while u == 0:
-            u = random.random()
-
-        x = -math.log(u) / lam
-        samples.append(x)
-
-    return samples
-
-print("\n--- Exponential Distribution (Inverse Transform Sampling) ---")
-
-lam = 2.0
-samples = sample_exponential(lam, 10000)
-
-sample_mean = sum(samples) / len(samples)
-
-print(f"Lambda = {lam}")
-print(f"Expected mean = {1/lam:.4f}")
-print(f"Sample mean   = {sample_mean:.4f}")
-
-fig, ax = plt.subplots(figsize=(8,5))
-
-lam = 2.0
-samples = sample_exponential(lam, 10000)
-
-# Histogram
-ax.hist(
-    samples,
-    bins=50,
-    density=True,
-    alpha=0.6,
-    label="Sampled Histogram"
-)
-
-# True PDF
-xs = [i * 0.01 for i in range(800)]
-ys = [lam * math.exp(-lam * x) for x in xs]
-
-ax.plot(xs, ys, linewidth=2, label="True PDF")
-
-ax.set_title("Exponential Distribution via Inverse Transform Sampling")
-ax.set_xlabel("x")
-ax.set_ylabel("Density")
-ax.legend()
-
-plt.tight_layout()
-plt.savefig("exponential_inverse_sampling.png", dpi=150)
-plt.close()
-
-print("Saved: exponential_inverse_sampling.png")
-
-import numpy as np
-
-# Loaded die A
-pA = np.array([0.05, 0.10, 0.15, 0.20, 0.20, 0.30])
-
-# Loaded die B
-pB = np.array([0.30, 0.25, 0.20, 0.10, 0.10, 0.05])
-
-# Joint distribution
-joint = np.outer(pA, pB)
-
-print("Joint Distribution:")
-print(joint)
-
-# Marginals
-marginal_A = joint.sum(axis=1)
-marginal_B = joint.sum(axis=0)
-
-print("\nMarginal Distribution of A:")
-print(marginal_A)
-
-print("\nMarginal Distribution of B:")
-print(marginal_B)
-
-# Independence test
-print("\nIndependent?")
-print(np.allclose(joint, np.outer(marginal_A, marginal_B)))
-
-import numpy as np
-from scipy.special import softmax
-
-logits = np.array([2.0, 0.5, -1.0, 3.0, 0.1])
-
-probs = softmax(logits)
-
-loss = -np.log(probs[3])
-
-print("Softmax probabilities:")
-print(probs)
-
-print("Cross-Entropy Loss:", loss)
-
-import torch
-import torch.nn as nn
-
-# Batch size = 1
-logits = torch.tensor([[2.0, 0.5, -1.0, 3.0, 0.1]])
-target = torch.tensor([3])
-
-criterion = nn.CrossEntropyLoss()
-
-loss = criterion(logits, target)
-
-print(loss.item())
+def rosenbrock(x):
+    return (1 - x[0])**2 + 100 * (x[1] - x[0]**2)**2
 
 
-import math
-
-def sequence_probability(sequence, log_probs):
-    """
-    Returns:
-        - most likely sequence
-        - total log probability
-        - equivalent raw probability
-    """
-    if len(sequence) != len(log_probs):
-        raise ValueError("Sequence and log_probs must have the same length.")
-
-    total_log_prob = sum(log_probs)
-    raw_prob = math.exp(total_log_prob)
-
-    return sequence, total_log_prob, raw_prob
+def rosenbrock_grad(x):
+    dx = -2 * (1 - x[0]) - 400 * x[0] * (x[1] - x[0]**2)
+    dy = 200 * (x[1] - x[0]**2)
+    return np.array([dx, dy])
 
 
-# ----------------------------------------------------
-# Test with a sentence of 50 words
-# Each word has probability 0.01
-# ----------------------------------------------------
+##############################################################
+# Saddle Function
+##############################################################
 
-sentence = [f"word{i+1}" for i in range(50)]
+def saddle(x):
+    return x[0]**2 - x[1]**2
 
-# log(p) for each word
-log_probs = [math.log(0.01)] * 50
 
-sequence, total_log_prob, raw_prob = sequence_probability(sentence, log_probs)
+def saddle_grad(x):
+    return np.array([2 * x[0], -2 * x[1]])
 
-print("Most likely sequence:")
-print(" ".join(sequence))
 
-print("\nTotal log probability:")
-print(total_log_prob)
+##############################################################
+# Gradient Descent
+##############################################################
 
-print("\nEquivalent raw probability:")
-print(raw_prob)
+class GradientDescent:
 
-# Verify against direct multiplication
-direct_prob = 0.01 ** 50
+    def __init__(self, lr=0.001, decay=False):
+        self.lr0 = lr
+        self.decay = decay
 
-print("\nDirect multiplication:")
-print(direct_prob)
+    def optimize(self, grad_fn, loss_fn, x0, steps):
 
-print("\nMatch:",
-      math.isclose(raw_prob, direct_prob, rel_tol=1e-12))
+        x = x0.copy()
+
+        history = []
+        losses = []
+
+        for step in range(steps):
+
+            lr = self.lr0
+
+            if self.decay:
+                lr = self.lr0 * (0.999 ** step)
+
+            grad = grad_fn(x)
+
+            x = x - lr * grad
+
+            history.append(x.copy())
+            losses.append(loss_fn(x))
+
+        return x, np.array(history), np.array(losses)
+
+
+##############################################################
+# Momentum GD
+##############################################################
+
+class MomentumGD:
+
+    def __init__(self, lr=0.001, momentum=0.9):
+
+        self.lr = lr
+        self.momentum = momentum
+
+    def optimize(self, grad_fn, loss_fn, x0, steps):
+
+        x = x.copy() if False else x0.copy()
+        velocity = np.zeros_like(x)
+
+        history = []
+        losses = []
+
+        for _ in range(steps):
+
+            grad = grad_fn(x)
+
+            velocity = self.momentum * velocity - self.lr * grad
+
+            x = x + velocity
+
+            history.append(x.copy())
+            losses.append(loss_fn(x))
+
+        return x, np.array(history), np.array(losses)
+
+
+##############################################################
+# Adam
+##############################################################
+
+class Adam:
+
+    def __init__(self, lr=0.05):
+
+        self.lr = lr
+        self.beta1 = 0.9
+        self.beta2 = 0.999
+        self.eps = 1e-8
+
+    def optimize(self, grad_fn, loss_fn, x0, steps):
+
+        x = x0.copy()
+
+        m = np.zeros_like(x)
+        v = np.zeros_like(x)
+
+        history = []
+        losses = []
+
+        for t in range(1, steps + 1):
+
+            grad = grad_fn(x)
+
+            m = self.beta1 * m + (1 - self.beta1) * grad
+            v = self.beta2 * v + (1 - self.beta2) * grad**2
+
+            m_hat = m / (1 - self.beta1**t)
+            v_hat = v / (1 - self.beta2**t)
+
+            x = x - self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
+
+            history.append(x.copy())
+            losses.append(loss_fn(x))
+
+        return x, np.array(history), np.array(losses)
+
+
+##############################################################
+# Experiment 1
+##############################################################
+
+print("=" * 60)
+print("Learning Rate Sweep")
+print("=" * 60)
+
+learning_rates = [0.0001, 0.0005, 0.001, 0.005, 0.01]
+
+best_lr = None
+
+for lr in learning_rates:
+
+    gd = GradientDescent(lr=lr)
+
+    x, history, losses = gd.optimize(
+        rosenbrock_grad,
+        rosenbrock,
+        np.array([-1.2, 1.0]),
+        5000
+    )
+
+    print(f"lr={lr:<8} final loss={losses[-1]:.6f}")
+
+    if np.isfinite(losses[-1]) and losses[-1] < 0.01:
+        best_lr = lr
+
+print("\nLargest learning rate that converged:", best_lr)
+
+
+##############################################################
+# Experiment 2
+##############################################################
+
+print("\n" + "=" * 60)
+print("Momentum Comparison")
+print("=" * 60)
+
+momenta = [0.0, 0.5, 0.9, 0.99]
+
+best_loss = float("inf")
+best_momentum = None
+
+plt.figure(figsize=(8, 5))
+
+for m in momenta:
+
+    optimizer = MomentumGD(
+        lr=0.001,
+        momentum=m
+    )
+
+    x, history, losses = optimizer.optimize(
+        rosenbrock_grad,
+        rosenbrock,
+        np.array([-1.2, 1.0]),
+        5000
+    )
+
+    print(f"Momentum={m:<4} Final Loss={losses[-1]:.6f}")
+
+    if losses[-1] < best_loss:
+        best_loss = losses[-1]
+        best_momentum = m
+
+    plt.plot(losses, label=f"m={m}")
+
+print("\nFastest / Best Momentum =", best_momentum)
+
+plt.yscale("log")
+plt.xlabel("Iteration")
+plt.ylabel("Loss")
+plt.title("Momentum Comparison")
+plt.legend()
+plt.grid(True)
+
+##############################################################
+# Experiment 3
+##############################################################
+
+print("\n" + "=" * 60)
+print("Saddle Point Escape")
+print("=" * 60)
+
+x0 = np.array([0.01, 0.01])
+
+methods = {
+    "Gradient Descent": GradientDescent(lr=0.1),
+    "Momentum": MomentumGD(lr=0.1, momentum=0.9),
+    "Adam": Adam(lr=0.05)
+}
+
+plt.figure(figsize=(8, 5))
+
+for name, optimizer in methods.items():
+
+    x, history, losses = optimizer.optimize(
+        saddle_grad,
+        saddle,
+        x0,
+        200
+    )
+
+    print(f"{name:18s} Final Point={x}  Final Loss={losses[-1]:.6f}")
+
+    plt.plot(losses, label=name)
+
+plt.xlabel("Iteration")
+plt.ylabel("Loss")
+plt.title("Saddle Point Escape")
+plt.legend()
+plt.grid(True)
+
+##############################################################
+# Experiment 4
+##############################################################
+
+print("\n" + "=" * 60)
+print("Learning Rate Decay")
+print("=" * 60)
+
+plt.figure(figsize=(8, 5))
+
+for decay in [False, True]:
+
+    optimizer = GradientDescent(
+        lr=0.001,
+        decay=decay
+    )
+
+    x, history, losses = optimizer.optimize(
+        rosenbrock_grad,
+        rosenbrock,
+        np.array([-1.2, 1.0]),
+        5000
+    )
+
+    print(f"Decay={decay:<5} Final Loss={losses[-1]:.6f}")
+
+    plt.plot(losses, label=f"Decay={decay}")
+
+plt.yscale("log")
+plt.xlabel("Iteration")
+plt.ylabel("Loss")
+plt.title("Learning Rate Decay")
+plt.legend()
+plt.grid(True)
+
+##############################################################
+# Show All Graphs
+##############################################################
+
+plt.show()
